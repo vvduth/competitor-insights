@@ -20,7 +20,7 @@ app.use(cors());
 
 // route import 
 app.use("/api/business", businessRouter);
-app.use("/api/comparison", comparisonRouter);
+app.use("/api", comparisonRouter);
 
 // routes
 app.get("/", (req, res) => {

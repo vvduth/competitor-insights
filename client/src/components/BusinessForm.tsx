@@ -27,6 +27,23 @@ const BusinessForm = () => {
       alert("Failed to fetch business data. Please try again later.");
     }
   };
+
+  const handleAIRecommend = async () => {
+    
+    if (!store.business) {
+      alert("Please fetch a business profile first.");
+      return;
+    }
+
+    try {
+      const res = await axios.post("/api/suggestions", store.business);
+      console.log("AI recommendations:", res.data);
+      alert("AI recommendations fetched successfully. Check console for details.");
+    } catch (error) {
+      console.error("Error fetching AI recommendations:", error);
+      alert("Failed to fetch AI recommendations. Please try again later.");
+    }
+  }
   return (
     <>
       <form className="space-y-6">
@@ -64,6 +81,9 @@ const BusinessForm = () => {
           Click to fetch and analyze business profile data
         </p>
       </form>
+      <button className="w-full bg-green-400 border 
+      rounded-xl text-white font-semibold py-3 px-6"
+        onClick={handleAIRecommend}>Get AI recommend</button>
     </>
   );
 };
