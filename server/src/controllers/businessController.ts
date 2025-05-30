@@ -18,10 +18,9 @@ export const fetchBusinessProfile = async (req: Request, res: Response): Promise
       return;
     }
 
-    res.status(200).json({
-      success: true,
-      data: business
-    });
+    res.status(200).json(
+     business
+    );
   } catch (error) {
     console.error('Error fetching business profile:', error);
     res.status(500).json({ error: 'Internal server error' });

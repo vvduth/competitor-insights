@@ -2,7 +2,7 @@ import {
   BusinessComparison,
   BusinessProfile,
   CompetitorAnalysis,
-  AIRecommendation,
+
 } from "../types";
 import { mockBusinesses } from "../utils/mockData";
 
