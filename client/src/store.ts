@@ -4,6 +4,8 @@ import type { BusinessProfile } from "./types"
 interface StoreState {
     business: BusinessProfile | null;
     setBusiness: (business: BusinessProfile) => void;
+    aiText: string;
+    setAiText: (text: string) => void;
     competitors: BusinessProfile[];
     setCompetitors: (competitors: BusinessProfile[]) => void;
 }
@@ -11,6 +13,8 @@ interface StoreState {
 export const useStore = create<StoreState>((set) => ({
     business: null as BusinessProfile | null,
     setBusiness: (business:BusinessProfile) => set({ business }),
+    aiText: "",
+    setAiText: (text: string) => set({ aiText: text }),
     competitors: [] as BusinessProfile[],
     setCompetitors: (competitors: BusinessProfile[]) => set({ competitors }),   
 }))

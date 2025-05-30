@@ -39,6 +39,7 @@ const BusinessForm = () => {
       const res = await axios.post("/api/suggestions", store.business);
       console.log("AI recommendations:", res.data);
       alert("AI recommendations fetched successfully. Check console for details.");
+      store.setAiText(res.data);
     } catch (error) {
       console.error("Error fetching AI recommendations:", error);
       alert("Failed to fetch AI recommendations. Please try again later.");
