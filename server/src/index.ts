@@ -4,8 +4,9 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import businessRouter from "./routes/business";
+import comparisonRouter from "./routes/comparison";
 
-// route import 
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
+// route import 
+app.use("/api/business", businessRouter);
+app.use("/api/comparison", comparisonRouter);
 
 // routes
 app.get("/", (req, res) => {

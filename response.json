@@ -1,0 +1,25 @@
+{
+  "searchParameters": {
+    "q": "evin kebab",
+    "gl": "fi",
+    "type": "places",
+    "engine": "google"
+  },
+  "places": [
+    {
+      "position": 1,
+      "title": "Evin",
+      "address": "Sammonkatu 34, 33540 Tampere",
+      "latitude": 61.496707400000005,
+      "longitude": 23.799924999999998,
+      "rating": 4.4,
+      "ratingCount": 1000,
+      "priceLevel": "€10-15",
+      "category": "Pizza restaurant",
+      "phoneNumber": "03 2557124",
+      "website": "http://www.evin.fi/",
+      "cid": "12037540927625405181"
+    }
+  ],
+  "credits": 1
+}

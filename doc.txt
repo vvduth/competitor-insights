@@ -1,0 +1,2 @@
+/place => rating , rating count, address, lat long, price, catagory. phone, website, cid
+/reviews => search by cid

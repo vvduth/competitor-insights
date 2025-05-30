@@ -1,0 +1,42 @@
+{
+  "searchParameters": {
+    "q": "social burger joint",
+    "type": "maps",
+    "cid": "3678290880686892686",
+    "engine": "google"
+  },
+  "ll": "@60.1701306,24.9412234,17z",
+  "places": [
+    {
+      "position": 1,
+      "title": "Social Burgerjoint",
+      "address": "Kaivokatu 8, 00100 Helsinki, Finland",
+      "latitude": 60.1701306,
+      "longitude": 24.9412234,
+      "rating": 4.2,
+      "ratingCount": 1429,
+      "priceLevel": "€15-20",
+      "type": "Hamburger restaurant",
+      "types": [
+        "Hamburger restaurant",
+        "Fast food restaurant"
+      ],
+      "website": "https://www.burgerjoint.fi/",
+      "phoneNumber": "+358 40 1879639",
+      "openingHours": {
+        "Thursday": "11 AM-9 PM",
+        "Friday": "11 AM-10 PM",
+        "Saturday": "11 AM-10 PM",
+        "Sunday": "12-9 PM",
+        "Monday": "11 AM-9 PM",
+        "Tuesday": "11 AM-9 PM",
+        "Wednesday": "11 AM-9 PM"
+      },
+      "thumbnailUrl": "https://lh3.googleusercontent.com/gps-proxy/ALd4DhH3_aU2nX9474P8NSXyLeSeP9DqlxovUnPbFvTkzhWIjTLtlLxHXAYcSylotdqaaymsaaSBZDr3wRWHD1wl42AI3g5OOMPbut6g786Q3iY2qgBDkuqKTiAG-XK6Zp7QjDNIU24ZEovProsH4mtnpxh76mXmp5_-DJcBs1AJRuS1oG8LedL6d9TJeA",
+      "cid": "3678290880686892686",
+      "fid": "0x46920b9050ec72a5:0x330bea114be6a68e",
+      "placeId": "ChIJpXLsUJALkkYRjqbmSxHqCzM"
+    }
+  ],
+  "credits": 3
+}
