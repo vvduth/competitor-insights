@@ -11,18 +11,18 @@ export interface BusinessProfile {
   category: string;
   rating: number;
   reviewCount: number;
-  photoCount: number;
+  photoCount?: number;
   address: string;
+  menuLink?: string;
   phone?: string;
   website?: string;
   hours?: BusinessHours;
   description?: string;
   amenities: string[];
-  priceLevel?: number;
+  priceLevel?: number |string;
   isVerified: boolean;
   lastUpdated: Date;
 }
-
 export interface BusinessHours {
   monday?: string;
   tuesday?: string;

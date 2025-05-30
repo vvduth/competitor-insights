@@ -73,7 +73,7 @@ const BusinessProfile = () => {
         </div>
         <div className="text-right">
           <div className="flex items-center justify-end mb-2">
-            {renderPriceLevel(business.priceLevel)}
+            {business.priceLevel}
           </div>
         </div>
       </div>

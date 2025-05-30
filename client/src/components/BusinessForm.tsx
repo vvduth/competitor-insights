@@ -29,6 +29,17 @@ const BusinessForm = () => {
     }
   };
 
+  const handleBussinessSelect = async (cid: string) => {
+    try {
+      const res = await axios.get(`/api/business/${cid}`);
+      console.log("Business profile fetched successfully:", res.data);
+      store.setBusiness(res.data as BusinessProfile);
+    } catch (error) {
+      console.error("Error fetching business profile:", error);
+      alert("Failed to fetch business profile. Please try again later.");
+    }
+  }
+
   
 
   const handleAIRecommend = async () => {
@@ -78,10 +89,14 @@ const BusinessForm = () => {
               we found {store.searchResult.length} results for "{businessName}": 
             </h3>
             <ul className="list-disc pl-5 space-y-1">
-              {store.searchResult.map((result, index) => (
+              {store.searchResult.map((result) => (
                 <li key={result.cid} className="text-gray-700">
                   {result.title} - {result.address}
-                  <button className="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-md transition-colors duration-200">Analyze this</button>
+                  <button className="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-md transition-colors duration-200"
+                    onClick={() => handleBussinessSelect(result.cid)}
+                    type="button" 
+                    aria-label={`Analyze ${result.title}`}
+                  >Analyze this</button>
                 </li>
               ))}
             </ul>

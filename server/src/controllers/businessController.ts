@@ -49,3 +49,22 @@ export const fetchSearchResults = async (req: Request, res: Response): Promise<v
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export const fetchBusinessProfileFromAPI = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { cid } = req.params;
+    if (!cid) {
+      res.status(400).json({ error: 'Business CID is required' });
+      return;
+    }
+    const businessProfile = await businessService.getBusinessProfileFromAPI(cid);
+    if (!businessProfile) {
+      res.status(404).json({ error: 'Business profile not found' });
+      return;
+    }
+    res.status(200).json(businessProfile);
+  } catch (error) {
+    console.error('Error fetching business profile from API:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}

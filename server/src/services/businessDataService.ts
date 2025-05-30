@@ -2,12 +2,15 @@ import {
   BusinessComparison,
   BusinessProfile,
   CompetitorAnalysis,
+  convertGooglePlaceToBusinessProfile,
+  GooglePlaceResult,
 } from "../types";
 import axios from "axios";
 import { mockBusinesses } from "../utils/mockData";
 
 class BusinessService {
   private businesses = mockBusinesses;
+  
 
   async searchBusiness(businessName: string): Promise<BusinessProfile | null> {
     // In production, this would call Google Places API
@@ -41,7 +44,34 @@ class BusinessService {
       }
     } catch (error) {
       console.error("Error fetching search results:", error);
-      return mockBusinesses
+      return mockBusinesses;
+    }
+  }
+
+  async getBusinessProfileFromAPI(cid: string) {
+    let data = JSON.stringify({
+      cid: cid,
+    });
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://google.serper.dev/maps",
+      headers: {
+        "X-API-KEY": process.env.SERPER_API_KEY || "",
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    try {
+       const response = await axios.request(config);
+       const place =  response.data.places[0] as GooglePlaceResult;
+       return convertGooglePlaceToBusinessProfile(place);
+    } catch (error) {
+      console.error("Error fetching business profile:", error);
+      return null;
+      
     }
   }
 
