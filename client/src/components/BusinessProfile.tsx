@@ -34,14 +34,6 @@ const BusinessProfile = () => {
     return stars;
   };
 
-  const renderPriceLevel = (level: number|undefined) => {
-    if (!level || level === undefined) {
-        return <span className="text-gray-500">N/A</span>;
-    }
-    return '$'.repeat(level) + '$'.repeat(4 - level).split('').map((_, i) => 
-      <span key={i} className="text-gray-300">$</span>
-    );
-  };
 
   const formatDay = (day: string) => {
     return day.charAt(0).toUpperCase() + day.slice(1);

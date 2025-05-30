@@ -1,7 +1,5 @@
 import {
-  BusinessComparison,
   BusinessProfile,
-  CompetitorAnalysis,
   convertGooglePlaceToBusinessProfile,
   GooglePlaceResult,
 } from "../types";
@@ -10,7 +8,6 @@ import { mockBusinesses } from "../utils/mockData";
 
 class BusinessService {
   private businesses = mockBusinesses;
-  
 
   async searchBusiness(businessName: string): Promise<BusinessProfile | null> {
     // In production, this would call Google Places API
@@ -65,27 +62,43 @@ class BusinessService {
     };
 
     try {
-       const response = await axios.request(config);
-       const place =  response.data.places[0] as GooglePlaceResult;
-       return convertGooglePlaceToBusinessProfile(place);
+      const response = await axios.request(config);
+      const place = response.data.places[0] as GooglePlaceResult;
+      return convertGooglePlaceToBusinessProfile(place);
     } catch (error) {
       console.error("Error fetching business profile:", error);
       return null;
-      
     }
   }
 
-  async findCompetitors(
-    targetBusiness: BusinessProfile
-  ): Promise<BusinessProfile[]> {
+  async getNearbyCompetitorFromApi(query: string, latitude: number, longtidue: number) {
     // Find businesses in same category, excluding target
-    return this.businesses.filter(
-      (b) =>
-        b.id !== targetBusiness.id &&
-        (b.category === targetBusiness.category ||
-          b.category.includes("Pizza") ||
-          b.category.includes("Italian"))
-    );
+    let data = JSON.stringify({
+      q: query,
+      ll: `@${latitude},${longtidue},17z`,
+    });
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://google.serper.dev/maps",
+      headers: {
+        "X-API-KEY": process.env.SERPER_API_KEY || "",
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    try {
+      const response = await axios.request(config);
+      const places = response.data.places as GooglePlaceResult[];
+      const competitors = places
+        .map((place) => convertGooglePlaceToBusinessProfile(place));
+      return competitors;
+    } catch (error) {
+      console.error("Error fetching competitors:", error);
+      return [];
+    }
   }
 }
 

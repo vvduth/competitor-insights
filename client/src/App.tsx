@@ -1,10 +1,9 @@
 import AIRecommend from "./components/AIRecommend";
 import BusinessForm from "./components/BusinessForm";
 import BusinessProfile from "./components/BusinessProfile";
-
+import CompetitorNearYou from "./components/CompetitorNearYou";
 
 function App() {
-
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex  justify-center p-4">
@@ -19,11 +18,12 @@ function App() {
               </p>
             </div>
             <div className="flex flex-col md:flex-row space-x-8">
-              <div className="w-full">
-                <BusinessForm />
-                <BusinessProfile />
+              <div className="w-full flex flex-col">
+               <BusinessForm />
+                  <BusinessProfile />
+                  <CompetitorNearYou />
               </div>
-              <div className="w-full">
+              <div className="w-full mt-8 md:mt-0">
                 <AIRecommend />
               </div>
             </div>

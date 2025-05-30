@@ -9,6 +9,7 @@ const BusinessForm = () => {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    store.setSelectedCompetitors([]); // Reset selected competitors on new search
     if (!businessName.trim()) {
       alert("Please enter a valid business name.");
       return;
@@ -17,11 +18,12 @@ const BusinessForm = () => {
     try {
       console.log("Fetching data for:", encodeURIComponent(businessName));
       const res = await axios.post("/api/business", {
-        businessName: businessName.trim(),})
+        businessName: businessName.trim(),
+      });
       //store.setBusiness(res.data as BusinessProfile);
 
       console.log("Business data fetched successfully:", res.data);
-      
+
       store.setSearchResult(res.data);
     } catch (error) {
       console.error("Error fetching business data:", error);
@@ -38,12 +40,9 @@ const BusinessForm = () => {
       console.error("Error fetching business profile:", error);
       alert("Failed to fetch business profile. Please try again later.");
     }
-  }
-
-  
+  };
 
   const handleAIRecommend = async () => {
-    
     if (!store.business) {
       alert("Please fetch a business profile first.");
       return;
@@ -52,13 +51,15 @@ const BusinessForm = () => {
     try {
       const res = await axios.post("/api/suggestions", store.business);
       console.log("AI recommendations:", res.data);
-      alert("AI recommendations fetched successfully. Check console for details.");
+      alert(
+        "AI recommendations fetched successfully. Check console for details."
+      );
       store.setAiText(res.data);
     } catch (error) {
       console.error("Error fetching AI recommendations:", error);
       alert("Failed to fetch AI recommendations. Please try again later.");
     }
-  }
+  };
   return (
     <>
       <form className="space-y-6">
@@ -86,17 +87,20 @@ const BusinessForm = () => {
         {store.searchResult.length > 0 && (
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              we found {store.searchResult.length} results for "{businessName}": 
+              we found {store.searchResult.length} results for "{businessName}":
             </h3>
             <ul className="list-disc pl-5 space-y-1">
               {store.searchResult.map((result) => (
                 <li key={result.cid} className="text-gray-700">
                   {result.title} - {result.address}
-                  <button className="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-md transition-colors duration-200"
+                  <button
+                    className="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-md transition-colors duration-200"
                     onClick={() => handleBussinessSelect(result.cid)}
-                    type="button" 
+                    type="button"
                     aria-label={`Analyze ${result.title}`}
-                  >Analyze this</button>
+                  >
+                    Analyze this
+                  </button>
                 </li>
               ))}
             </ul>
@@ -115,10 +119,23 @@ const BusinessForm = () => {
           Click to fetch and analyze business profile data
         </p>
       </form>
-      
-      <button className="w-full bg-green-400 border 
+
+      <button
+        className="w-full bg-green-400 border 
       rounded-xl text-white font-semibold py-3 px-6"
-        onClick={handleAIRecommend}>Get AI recommend</button>
+        onClick={handleAIRecommend}
+      >
+        Get AI recommend
+      </button>
+
+      <button
+        className="w-full bg-green-400 border 
+      rounded-xl text-white font-semibold py-3 px-6"
+        onClick={handleAIRecommend}
+      >
+        Get AI compare + recommend again {store.selectedCompetitors.length}{" "}
+        competitor you picked
+      </button>
     </>
   );
 };

@@ -22,6 +22,8 @@ export interface BusinessProfile {
   priceLevel?: number |string;
   isVerified: boolean;
   lastUpdated: Date;
+  latitude?: number;
+  longitude?: number;
 }
 export interface BusinessHours {
   monday?: string;

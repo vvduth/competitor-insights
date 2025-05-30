@@ -43,6 +43,8 @@ export interface BusinessProfile {
   hours?: BusinessHours;
   description?: string;
   amenities: string[];
+  latitude?: number;
+  longitude?: number;
   priceLevel?: number |string;
   isVerified: boolean;
   lastUpdated: Date;
@@ -89,6 +91,8 @@ export function convertGooglePlaceToBusinessProfile(place: GooglePlaceResult): B
     phone: place.phoneNumber || '',
     menuLink: place.menu || '', // Not always provided
     website: place.website,
+    latitude: place.latitude,
+    longitude: place.longitude,
     description: '', // Not provided by this API response
     hours: {
       monday: place.openingHours?.Monday || 'Closed',

@@ -24,3 +24,4 @@ export const suggestBusinessProfiles = async (req: Request, res: Response): Prom
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+
