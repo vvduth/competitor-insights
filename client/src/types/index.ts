@@ -1,4 +1,10 @@
-
+export interface SearchResult {
+  address: string;
+  title: string;
+  cid: string;
+  category: string;
+  phoneNumber?: string;
+}
 export interface BusinessProfile {
   id: string;
   name: string;

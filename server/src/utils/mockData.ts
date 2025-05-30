@@ -88,7 +88,7 @@ export const mockBusinesses: BusinessProfile[] = [
     category: "Pizza Restaurant",
     rating: 4.3,
     reviewCount: 203,
-    photoCount: 35,
+    //photoCount: 35,
     address: "321 Elm St, Downtown",
     phone: "(555) 456-7890",
     description: "Wood-fired pizza and traditional Italian cuisine",

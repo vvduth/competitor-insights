@@ -16,17 +16,20 @@ const BusinessForm = () => {
 
     try {
       console.log("Fetching data for:", encodeURIComponent(businessName));
-      const res = await axios.get(
-        `/api/business/${encodeURIComponent(businessName)}`
-      );
-      store.setBusiness(res.data as BusinessProfile);
+      const res = await axios.post("/api/business", {
+        businessName: businessName.trim(),})
+      //store.setBusiness(res.data as BusinessProfile);
 
       console.log("Business data fetched successfully:", res.data);
+      
+      store.setSearchResult(res.data);
     } catch (error) {
       console.error("Error fetching business data:", error);
       alert("Failed to fetch business data. Please try again later.");
     }
   };
+
+  
 
   const handleAIRecommend = async () => {
     
@@ -69,6 +72,21 @@ const BusinessForm = () => {
             Enter the full name of the business you want to analyze
           </p>
         </div>
+        {store.searchResult.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              we found {store.searchResult.length} results for "{businessName}": 
+            </h3>
+            <ul className="list-disc pl-5 space-y-1">
+              {store.searchResult.map((result, index) => (
+                <li key={result.cid} className="text-gray-700">
+                  {result.title} - {result.address}
+                  <button className="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-md transition-colors duration-200">Analyze this</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <button
           type="submit"
@@ -82,6 +100,7 @@ const BusinessForm = () => {
           Click to fetch and analyze business profile data
         </p>
       </form>
+      
       <button className="w-full bg-green-400 border 
       rounded-xl text-white font-semibold py-3 px-6"
         onClick={handleAIRecommend}>Get AI recommend</button>

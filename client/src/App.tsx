@@ -19,11 +19,11 @@ function App() {
               </p>
             </div>
             <div className="flex flex-col md:flex-row space-x-8">
-              <div>
+              <div className="w-full">
                 <BusinessForm />
                 <BusinessProfile />
               </div>
-              <div>
+              <div className="w-full">
                 <AIRecommend />
               </div>
             </div>

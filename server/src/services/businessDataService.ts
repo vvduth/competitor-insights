@@ -2,8 +2,8 @@ import {
   BusinessComparison,
   BusinessProfile,
   CompetitorAnalysis,
-
 } from "../types";
+import axios from "axios";
 import { mockBusinesses } from "../utils/mockData";
 
 class BusinessService {
@@ -15,6 +15,34 @@ class BusinessService {
       b.name.toLowerCase().includes(businessName.toLowerCase())
     );
     return business || null;
+  }
+
+  async getSearchResults(businessName: string) {
+    let data = JSON.stringify({
+      q: businessName,
+      gl: "fi",
+    });
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://google.serper.dev/places",
+      headers: {
+        "X-API-KEY": process.env.SERPER_API_KEY || "",
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    try {
+      const response = await axios.request(config);
+      if (response.data) {
+        const places = response.data.places;
+        return places;
+      }
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      return mockBusinesses
+    }
   }
 
   async findCompetitors(

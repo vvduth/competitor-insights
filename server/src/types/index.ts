@@ -5,7 +5,7 @@ export interface BusinessProfile {
   category: string;
   rating: number;
   reviewCount: number;
-  photoCount: number;
+  photoCount?: number;
   address: string;
   phone?: string;
   website?: string;
