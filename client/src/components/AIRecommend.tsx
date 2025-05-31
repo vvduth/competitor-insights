@@ -219,7 +219,7 @@ const AIRecommend: React.FC<any> = () => {
         competitors: store.selectedCompetitors,
       });
 
-      console.log("AI comparison:", res.data);
+      
       store.setAiText(res.data);
       alert("Comparison completed! Check the AI recommendations section.");
     } catch (error) {
