@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { useStore } from "../store";
-
+import axios from "axios";
 const renderMarkdownContent = (content: string) => {
   // Split content into lines and process each one
   const lines = content.split("\n");
@@ -181,6 +181,55 @@ const renderMarkdownContent = (content: string) => {
 const AIRecommend: React.FC<any> = () => {
   const store = useStore();
 
+  const [loading, setLoading] = useState(false)
+   const handleAIRecommend = async () => {
+    if (!store.business) {
+      alert("Please fetch a business profile first.");
+      return;
+    }
+
+    try {
+      const res = await axios.post("/api/suggestions", store.business);
+      console.log("AI recommendations:", res.data);
+      alert(
+        "AI recommendations fetched successfully. Check console for details."
+      );
+      store.setAiText(res.data);
+    } catch (error) {
+      console.error("Error fetching AI recommendations:", error);
+      alert("Failed to fetch AI recommendations. Please try again later.");
+    }
+  };
+
+  const handleAICompareWithCompetitors = async () => {
+    if (!store.business) {
+      alert("Please select a business first.");
+      return;
+    }
+
+    if (store.selectedCompetitors.length === 0) {
+      alert("Please select at least one competitor to compare.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/comparison/compare", {
+        business: store.business,
+        competitors: store.selectedCompetitors,
+      });
+
+      console.log("AI comparison:", res.data);
+      store.setAiText(res.data);
+      alert("Comparison completed! Check the AI recommendations section.");
+    } catch (error) {
+      console.error("Error fetching AI comparison:", error);
+      alert("Failed to generate comparison. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className=" bg-white rounded-xl shadow-lg p-8 m-6">
       {/* Header */}
@@ -196,10 +245,58 @@ const AIRecommend: React.FC<any> = () => {
         <p className="text-gray-600">
           AI-powered recommendations based on competitor benchmarking
         </p>
+        {store.business && (
+        <>
+          <button
+            className=" bg-green-600 hover:bg-green-700 focus:ring-4
+           focus:ring-green-200 text-white font-medium py-2 
+           px-4 rounded-lg transition-colors duration-200 focus:outline-none mt-4 text-sm"
+            onClick={handleAIRecommend}
+          >
+            Get AI recommend
+          </button>
+
+          <button
+            className="bg-green-600 hover:bg-green-700 focus:ring-4
+           focus:ring-blue-200 text-white font-medium py-2 
+           px-4 rounded-lg transition-colors duration-200 focus:outline-none mt-4 text-sm"
+            onClick={handleAICompareWithCompetitors}
+          >
+            Get AI compare + recommend again {store.selectedCompetitors.length}{" "}
+            competitor you picked
+          </button>
+        </>
+      )}
       </div>
+
+      
+      
 
       {/* Content */}
       <div className="prose max-w-none">
+        {loading && (
+          <div className="flex items-center justify-center py-6">
+            <svg
+              className="animate-spin h-8 w-8 text-blue-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2.93 6.364A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3.93-1.574zM12 20a8 8 0 008-8h-4a4 4 0 01-4 4v4zm6.364-2.93A7.962 7.962 0 0120 12h4c0 3.042-1.135 5.824-3 7.938l-3.636-1.868zM12 4a8 8 0 00-8 8h4a4 4 0 014-4V4z"
+              ></path>
+            </svg>
+          </div>)}
         {store.aiText && (
           <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
             <h2 className="text-xl font-semibold mb-4">AI Recommendations</h2>

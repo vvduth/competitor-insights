@@ -94,6 +94,8 @@ class BusinessService {
       const places = response.data.places as GooglePlaceResult[];
       const competitors = places
         .map((place) => convertGooglePlaceToBusinessProfile(place));
+      // Filter out the target business if it exists in the results
+      
       return competitors;
     } catch (error) {
       console.error("Error fetching competitors:", error);

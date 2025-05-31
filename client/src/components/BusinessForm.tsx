@@ -51,53 +51,7 @@ const BusinessForm = () => {
     }
   };
 
-  const handleAIRecommend = async () => {
-    if (!store.business) {
-      alert("Please fetch a business profile first.");
-      return;
-    }
-
-    try {
-      const res = await axios.post("/api/suggestions", store.business);
-      console.log("AI recommendations:", res.data);
-      alert(
-        "AI recommendations fetched successfully. Check console for details."
-      );
-      store.setAiText(res.data);
-    } catch (error) {
-      console.error("Error fetching AI recommendations:", error);
-      alert("Failed to fetch AI recommendations. Please try again later.");
-    }
-  };
-
-  const handleAICompareWithCompetitors = async () => {
-    if (!store.business) {
-      alert("Please select a business first.");
-      return;
-    }
-
-    if (store.selectedCompetitors.length === 0) {
-      alert("Please select at least one competitor to compare.");
-      return;
-    }
-
-    try {
-      setisLoading(true);
-      const res = await axios.post("/api/comparison/compare", {
-        business: store.business,
-        competitors: store.selectedCompetitors,
-      });
-
-      console.log("AI comparison:", res.data);
-      store.setAiText(res.data);
-      alert("Comparison completed! Check the AI recommendations section.");
-    } catch (error) {
-      console.error("Error fetching AI comparison:", error);
-      alert("Failed to generate comparison. Please try again later.");
-    } finally {
-      setisLoading(false);
-    }
-  };
+ 
   return (
     <>
       <form className="space-y-6">
@@ -162,28 +116,6 @@ const BusinessForm = () => {
         </p>
       </form>
 
-      {store.business && (
-        <>
-          <button
-            className="w-full bg-green-600 hover:bg-green-700 focus:ring-4
-           focus:ring-green-200 text-white font-semibold py-3 
-           px-6 rounded-lg transition-colors duration-200 focus:outline-none mt-6"
-            onClick={handleAIRecommend}
-          >
-            Get AI recommend
-          </button>
-
-          <button
-            className="w-full bg-green-600 hover:bg-green-700 focus:ring-4
-           focus:ring-blue-200 text-white font-semibold py-3 
-           px-6 rounded-lg transition-colors duration-200 focus:outline-none mt-6"
-            onClick={handleAICompareWithCompetitors}
-          >
-            Get AI compare + recommend again {store.selectedCompetitors.length}{" "}
-            competitor you picked
-          </button>
-        </>
-      )}
     </>
   );
 };

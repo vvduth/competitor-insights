@@ -129,7 +129,9 @@ export class AiService {
       });
 
       if (!res.text) {
-        throw new Error("No summary generated from Gemini API (empty response)");
+        throw new Error(
+          "No summary generated from Gemini API (empty response)"
+        );
       }
 
       return res.text;
@@ -146,18 +148,147 @@ export class AiService {
       return response || "No response generated";
     } catch (error) {
       console.error("Error generating AI response with OpenAI:", error);
-      
+
       if (error instanceof Error && error.message === "RATE_LIMIT_EXCEEDED") {
         try {
           console.log("OpenAI rate limit exceeded, trying Gemini...");
           const response = await this.generateWithGemini(profile);
           return response;
         } catch (geminiError) {
-          console.error("Gemini API failed after OpenAI quota exceeded:", geminiError);
+          console.error(
+            "Gemini API failed after OpenAI quota exceeded:",
+            geminiError
+          );
           throw new Error("Both AI services failed to generate response");
         }
       }
-      
+
+      throw error;
+    }
+  }
+
+  private async compareWithOpenAI(
+    businessProfile: BusinessProfile,
+    competitors: BusinessProfile[]
+  ) {
+    const prompt = `Compare this business with its selected competitors:
+
+        TARGET BUSINESS:
+        ${JSON.stringify(businessProfile, null, 2)}
+
+        SELECTED COMPETITORS:
+        ${JSON.stringify(competitors, null, 2)}
+
+        Provide a detailed comparison analysis focusing on:
+        1. **Competitive Positioning** - How does the target business rank vs competitors
+        2. **Key Differentiators** - What makes each business unique
+        3. **Improvement Opportunities** - Specific areas where the target can improve
+        4. **Strategic Recommendations** - Actionable steps based on competitor analysis
+
+        Format your response in markdown with clear sections.`;
+    try {
+      const openai = this.getOpenAIClient();
+      const response = await openai.chat.completions.create({
+        model: "gpt-4.1", // Fixed model name
+        messages: [
+          {
+            role: "system",
+            content: COMP_SYSTEM_PROMPT,
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        max_tokens: 1500,
+        temperature: 0.7,
+      });
+
+      return response.choices[0].message.content;
+    } catch (error: any) {
+      if (error?.status === 429) {
+        throw new Error("RATE_LIMIT_EXCEEDED");
+      }
+      console.error("Error occurred with OpenAI:", error);
+      throw error;
+    }
+  }
+
+  private async compareWithGemini(
+    businessProfile: BusinessProfile,
+    competitors: BusinessProfile[]
+  ) {
+    const prompt = `Compare this business with its selected competitors:
+
+        TARGET BUSINESS:
+        ${JSON.stringify(businessProfile, null, 2)}
+
+        SELECTED COMPETITORS:
+        ${JSON.stringify(competitors, null, 2)}
+
+        Provide a detailed comparison analysis focusing on:
+        1. **Competitive Positioning** - How does the target business rank vs competitors
+        2. **Key Differentiators** - What makes each business unique
+        3. **Improvement Opportunities** - Specific areas where the target can improve
+        4. **Strategic Recommendations** - Actionable steps based on competitor analysis
+
+        Format your response in markdown with clear sections.`;
+    try {
+      const gemini = this.getGeminiClient();
+      const res = await gemini.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { text: COMP_SYSTEM_PROMPT },
+              {
+                text: prompt,
+              },
+            ],
+          },
+        ],
+        config: {
+          temperature: 0.7,
+          maxOutputTokens: 1500,
+        },
+      });
+
+      if (!res.text) {
+        throw new Error(
+          "No summary generated from Gemini API (empty response)"
+        );
+      }
+
+      return res.text;
+    } catch (error) {
+      console.error("Error occurred with Gemini:", error);
+      throw error;
+    }
+  }
+
+  public async generateComparisonResponse(business: BusinessProfile, competitors: BusinessProfile[]) {
+    try {
+      // Try OpenAI first
+      const response = await this.compareWithOpenAI(business, competitors);
+      return response || "No response generated";
+    } catch (error) {
+      console.error("Error generating AI compare response with OpenAI:", error);
+
+      if (error instanceof Error && error.message === "RATE_LIMIT_EXCEEDED") {
+        try {
+          console.log("OpenAI rate limit exceeded, trying Gemini...");
+          const response = await this.compareWithGemini(business, competitors);
+          return response;
+        } catch (geminiError) {
+          console.error(
+            "Gemini API compare failed after OpenAI quota exceeded:",
+            geminiError
+          );
+          throw new Error("Both AI services failed to generate response");
+        }
+      }
+
       throw error;
     }
   }
