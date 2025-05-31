@@ -75,7 +75,7 @@ class BusinessService {
     // Find businesses in same category, excluding target
     let data = JSON.stringify({
       q: query,
-      ll: `@${latitude},${longtidue},17z`,
+      ll: `@${latitude},${longtidue},13z`,
     });
 
     let config = {

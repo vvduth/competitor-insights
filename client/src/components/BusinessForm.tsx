@@ -5,17 +5,21 @@ import type { BusinessProfile } from "../types";
 
 const BusinessForm = () => {
   const [businessName, setBusinessName] = useState("");
+  const [isLoading, setisLoading] = useState(false);
   const store = useStore();
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    store.setBusiness(null); // Reset business profile on new search
     store.setSelectedCompetitors([]); // Reset selected competitors on new search
+    store.setSearchResult([]); // Reset search results on new search
     if (!businessName.trim()) {
       alert("Please enter a valid business name.");
       return;
     }
 
     try {
+      setisLoading(true);
       console.log("Fetching data for:", encodeURIComponent(businessName));
       const res = await axios.post("/api/business", {
         businessName: businessName.trim(),
@@ -28,17 +32,22 @@ const BusinessForm = () => {
     } catch (error) {
       console.error("Error fetching business data:", error);
       alert("Failed to fetch business data. Please try again later.");
+    } finally {
+      setisLoading(false);
     }
   };
 
   const handleBussinessSelect = async (cid: string) => {
     try {
+      setisLoading(true);
       const res = await axios.get(`/api/business/${cid}`);
       console.log("Business profile fetched successfully:", res.data);
       store.setBusiness(res.data as BusinessProfile);
     } catch (error) {
       console.error("Error fetching business profile:", error);
       alert("Failed to fetch business profile. Please try again later.");
+    } finally {
+      setisLoading(false);
     }
   };
 
@@ -58,6 +67,35 @@ const BusinessForm = () => {
     } catch (error) {
       console.error("Error fetching AI recommendations:", error);
       alert("Failed to fetch AI recommendations. Please try again later.");
+    }
+  };
+
+  const handleAICompareWithCompetitors = async () => {
+    if (!store.business) {
+      alert("Please select a business first.");
+      return;
+    }
+
+    if (store.selectedCompetitors.length === 0) {
+      alert("Please select at least one competitor to compare.");
+      return;
+    }
+
+    try {
+      setisLoading(true);
+      const res = await axios.post("/api/comparison/compare", {
+        business: store.business,
+        competitors: store.selectedCompetitors,
+      });
+
+      console.log("AI comparison:", res.data);
+      store.setAiText(res.data);
+      alert("Comparison completed! Check the AI recommendations section.");
+    } catch (error) {
+      console.error("Error fetching AI comparison:", error);
+      alert("Failed to generate comparison. Please try again later.");
+    } finally {
+      setisLoading(false);
     }
   };
   return (
@@ -97,9 +135,10 @@ const BusinessForm = () => {
                     className="ml-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-md transition-colors duration-200"
                     onClick={() => handleBussinessSelect(result.cid)}
                     type="button"
+                    disabled={isLoading}
                     aria-label={`Analyze ${result.title}`}
                   >
-                    Analyze this
+                    {isLoading ? "Loading info..." : "Analyze"}
                   </button>
                 </li>
               ))}
@@ -109,33 +148,42 @@ const BusinessForm = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none"
+          className="w-full bg-blue-600 hover:bg-blue-700 focus:ring-4
+           focus:ring-blue-200 text-white font-semibold py-3 
+           px-6 rounded-lg transition-colors duration-200 focus:outline-none"
           aria-describedby="analyze-button-help"
           onClick={handleFormSubmit}
+          disabled={isLoading}
         >
-          Analyze Business
+          {isLoading ? "Searching..." : "Search for Business Profile"}
         </button>
         <p id="analyze-button-help" className="sr-only">
           Click to fetch and analyze business profile data
         </p>
       </form>
 
-      <button
-        className="w-full bg-green-400 border 
-      rounded-xl text-white font-semibold py-3 px-6"
-        onClick={handleAIRecommend}
-      >
-        Get AI recommend
-      </button>
+      {store.business && (
+        <>
+          <button
+            className="w-full bg-green-600 hover:bg-green-700 focus:ring-4
+           focus:ring-green-200 text-white font-semibold py-3 
+           px-6 rounded-lg transition-colors duration-200 focus:outline-none mt-6"
+            onClick={handleAIRecommend}
+          >
+            Get AI recommend
+          </button>
 
-      <button
-        className="w-full bg-green-400 border 
-      rounded-xl text-white font-semibold py-3 px-6"
-        onClick={handleAIRecommend}
-      >
-        Get AI compare + recommend again {store.selectedCompetitors.length}{" "}
-        competitor you picked
-      </button>
+          <button
+            className="w-full bg-green-600 hover:bg-green-700 focus:ring-4
+           focus:ring-blue-200 text-white font-semibold py-3 
+           px-6 rounded-lg transition-colors duration-200 focus:outline-none mt-6"
+            onClick={handleAICompareWithCompetitors}
+          >
+            Get AI compare + recommend again {store.selectedCompetitors.length}{" "}
+            competitor you picked
+          </button>
+        </>
+      )}
     </>
   );
 };

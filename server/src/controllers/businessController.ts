@@ -64,8 +64,7 @@ export const fetchBusinessProfileFromAPI = async (req: Request, res: Response): 
       return;
     }
 
-    const query = businessProfile.amenities?.join(' ') || '';
-    console.log('Query for nearby competitors:', query);
+
     res.status(200).json(businessProfile);
   } catch (error) {
     console.error('Error fetching business profile from API:', error);

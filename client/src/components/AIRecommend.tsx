@@ -1,12 +1,5 @@
 import React from "react";
 import { useStore } from "../store";
-import { MOCK_AI_CONTENT } from "../types/mockAIcontent";
-
-// Parse the markdown content into sections
-const parseContent = (content: string) => {
-  const sections = content.split("---").filter((section) => section.trim());
-  return sections;
-};
 
 const renderMarkdownContent = (content: string) => {
   // Split content into lines and process each one
