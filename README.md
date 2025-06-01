@@ -82,7 +82,7 @@ A full-stack web application that helps restaurant owners and local businesses i
 
 #### 1. Clone and Install
 ```bash
-git clone [your-repo-url]
+git clone https://github.com/vvduth/competitor-insights.git
 cd competitor-insights
 npm install
 ```
