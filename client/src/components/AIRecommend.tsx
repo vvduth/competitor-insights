@@ -189,6 +189,7 @@ const AIRecommend: React.FC<any> = () => {
     }
 
     try {
+      setLoading(true);
       const res = await axios.post("/api/suggestions", store.business);
       console.log("AI recommendations:", res.data);
       alert(
@@ -198,6 +199,8 @@ const AIRecommend: React.FC<any> = () => {
     } catch (error) {
       console.error("Error fetching AI recommendations:", error);
       alert("Failed to fetch AI recommendations. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -252,8 +255,9 @@ const AIRecommend: React.FC<any> = () => {
            focus:ring-green-200 text-white font-medium py-2 
            px-4 rounded-lg transition-colors duration-200 focus:outline-none mt-4 text-sm"
             onClick={handleAIRecommend}
+            disabled={loading}
           >
-            Get AI recommend
+           {loading ? "Loading..." : "Get AI Recommendations"}
           </button>
 
           <button
@@ -261,9 +265,10 @@ const AIRecommend: React.FC<any> = () => {
            focus:ring-blue-200 text-white font-medium py-2 
            px-4 rounded-lg transition-colors duration-200 focus:outline-none mt-4 text-sm"
             onClick={handleAICompareWithCompetitors}
+            disabled={loading || store.selectedCompetitors.length === 0}
           >
-            Get AI compare + recommend again {store.selectedCompetitors.length}{" "}
-            competitor you picked
+            {loading ? "Loading..." : <span>Get AI compare + recommend again {store.selectedCompetitors.length}{" "}
+            competitor you picked</span>}
           </button>
         </>
       )}

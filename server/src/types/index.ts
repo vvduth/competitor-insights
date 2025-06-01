@@ -12,6 +12,7 @@ export interface GooglePlaceResult {
   position: number;
   title: string;
   address: string;
+  description?: string;
   latitude: number;
   longitude: number;
   rating: number;
@@ -93,7 +94,7 @@ export function convertGooglePlaceToBusinessProfile(place: GooglePlaceResult): B
     website: place.website,
     latitude: place.latitude,
     longitude: place.longitude,
-    description: '', // Not provided by this API response
+    description: place.description, // Not provided by this API response
     hours: {
       monday: place.openingHours?.Monday || 'Closed',
       tuesday: place.openingHours?.Tuesday || 'Closed',
